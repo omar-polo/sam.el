@@ -21,7 +21,7 @@
 ;; CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ;; Author: Omar Polo <op@omarpolo.com>
-;; URL: https://git.omarpolo.com/sam-mode
+;; URL: https://git.omarpolo.com/sam.el
 ;; Keywords: emulation
 
 ;;; Commentary
@@ -39,7 +39,7 @@
   "sam for Emacs."
   :prefix "sam-"
   :group 'emulations
-  :link '(url-link :tag "Git repo" "https://git.omarpolo.com/sam"))
+  :link '(url-link :tag "Git repo" "https://git.omarpolo.com/sam.el"))
 
 (defvar sam-current-buffer nil
   "The active buffer where command would operate on.'")
