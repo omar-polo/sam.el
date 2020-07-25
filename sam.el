@@ -190,7 +190,6 @@
 
 (defun sam-cmd-linenum (_arg)
   (let ((p (sam-current-buffer-region)))
-    (message "p is %s" p)
     (cl-destructuring-bind (begin . end) p
       (with-current-buffer (sam-get-buffer)
         (insert (number-to-string (line-number-at-pos begin)) ","
