@@ -68,7 +68,7 @@
 (define-key sam-mode-map "\r" 'sam-newline)
 
 (defconst sam-cmd-alist
-  '(("=#" . sam-cmd-charoffset)
+  '(("=#" . sam-cmd-charoffset)         ; before = so it can get matched
     ("="  . sam-cmd-linenum)
     ("P"  . sam-cmd-filename)
     ("p"  . sam-cmd-print)
