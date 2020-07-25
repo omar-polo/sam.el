@@ -161,6 +161,11 @@
   (if (and (not sam-is-inserting) sam-display-prompt)
       (insert sam-prompt)))
 
+(defun sam-current-buffer-p (buf)
+  "True if `buf' is the current sam buffer."
+  (string-equal (buffer-name buf)
+                (buffer-name sam-current-buffer)))
+
 (defun sam-current-buffer-region ()
   "Returns a cons of `region-beginning' . `region-end' in the current buffer."
   (with-current-buffer sam-current-buffer
@@ -183,12 +188,15 @@
       (insert "#" (number-to-string begin) ","
               "#" (number-to-string end)   "\n"))))
 
-(defun sam-cmd-linenum ()
-  (cl-destructuring-bind (begin . end) (sam-current-buffer-region)
-    (with-current-buffer (sam-get-buffer)
-      (insert "TODO,TODO; "
-              "#" (number-to-string begin) ","
-              "#" (number-to-string end)   "\n"))))
+(defun sam-cmd-linenum (_arg)
+  (let ((p (sam-current-buffer-region)))
+    (message "p is %s" p)
+    (cl-destructuring-bind (begin . end) p
+      (with-current-buffer (sam-get-buffer)
+        (insert (number-to-string (line-number-at-pos begin)) ","
+                (number-to-string (line-number-at-pos end)) "; "
+                "#" (number-to-string begin) ","
+                "#" (number-to-string end)   "\n")))))
 
 (defun sam-cmd-filename (_arg)
   (with-current-buffer (sam-get-buffer)
@@ -210,7 +218,13 @@
 (defun sam-cmd-buflist (_arg)
   (with-current-buffer (sam-get-buffer)
     (dolist (buf (sam-list-file-buffers))
-      (insert "   " (buffer-file-name buf) "\n"))))
+      (insert
+       (if (buffer-modified-p buf) "'" " ")
+       ;; visible or not visible buffer? -, + or * for multiple window
+       (if (sam-current-buffer-p buf) "." " ")
+       " "
+       (buffer-name buf)
+       "\n"))))
 
 (defun sam-cmd-quit (_arg)
   (kill-buffer (sam-get-buffer)))
