@@ -6,7 +6,7 @@
 (require 'ert)
 (require 'sam)
 
-(ert-deftest sam-parse-command-test ()
+(ert-deftest sam-parse-line-test ()
   (dolist (spec '(("3" "p"  <- "3p")
                   ("3" "p"  <- "3 p")
                   ("34" "p" <- "34\tp")
@@ -16,5 +16,13 @@
       (cl-destructuring-bind (address . command) (sam-parse-command cmd)
         (should (string-equal exp-addr address))
         (should (string-equal exp-cmd  command))))))
+
+(ert-deftest sam-parse-command-test ()
+  (let ((spec '(("=#" -> "=#" sam-cmd-charoffset))))
+    (cl-loop
+     for (input _ exp-cmd exp-fn) in spec
+     do (cl-destructuring-bind (cmd . fn) (sam-parse-command input)
+          (should (string-equal exp-cmd cmd))
+          (should (string-equal exp-fn  fn))))))
 
 ;; (ert-run-tests-interactively t)

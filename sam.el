@@ -68,7 +68,7 @@
 (define-key sam-mode-map "\r" 'sam-newline)
 
 (defconst sam-cmd-alist
-  '(;; ("=#" . sam-cmd-charoffset)
+  '(("=#" . sam-cmd-charoffset)
     ("="  . sam-cmd-linenum)
     ("P"  . sam-cmd-filename)
     ("p"  . sam-cmd-print)
@@ -85,7 +85,7 @@
   (with-current-buffer (sam-get-buffer)
     (insert "?" err)))
 
-(defun sam-parse-command (s)
+(defun sam-parse-line (s)
   "Returns an cons of `address' and `command'"
   (let ((address "")
         (command "")
@@ -129,20 +129,22 @@
    (point-at-eol))
   (pop kill-ring))
 
+(defun sam-parse-command (cmd)
+  (cl-loop
+   for (command . fn) in sam-cmd-alist
+   when (string-equal command cmd) return `(,command . ,fn)))
+
 (defun sam-exec-command (cmd)
-  ;; TODO: naïve
-  (if (= (length cmd) 0)
-      nil
-    (let* ((c (substring cmd 0 1))
-           (f (cdr (assoc c sam-cmd-alist))))
-      (if f
-          (funcall f)
-        (sam-report-error (concat "unknown command ``" cmd "''"))))))
+  (let ((tmp (sam-parse-command cmd)))
+    (if tmp
+        (cl-destructuring-bind (cmd . fn) tmp
+          (funcall fn (substring cmd (length cmd))))
+      (sam-report-error (concat "unknown command: " cmd)))))
 
 (defun sam-exec-line ()
   "Run the sam command on this line."
   (let* ((line   (sam-get-line))
-         (parsed (sam-parse-command line))
+         (parsed (sam-parse-line line))
          (addr   (car parsed))
          (cmd    (cdr parsed)))
     (insert "\n")
