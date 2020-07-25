@@ -185,13 +185,17 @@
 (defun sam-cmd-charoffset (_arg)
   (cl-destructuring-bind (begin . end) (sam-current-buffer-region)
     (with-current-buffer (sam-get-buffer)
-      (insert "#" (number-to-string begin) ","
-              "#" (number-to-string end)   "\n"))))
+      (if (= begin end)
+          (insert "#" (number-to-string begin) "\n")
+        (insert "#" (number-to-string begin) ","
+                "#" (number-to-string end)   "\n")))))
 
 (defun sam-cmd-linenum (_arg)
-  (let ((p (sam-current-buffer-region)))
-    (cl-destructuring-bind (begin . end) p
-      (with-current-buffer (sam-get-buffer)
+  (cl-destructuring-bind (begin . end) (sam-current-buffer-region)
+    (with-current-buffer (sam-get-buffer)
+      (if (= begin end)
+          (insert (number-to-string (line-number-at-pos begin)) "; "
+                  "#" (number-to-string begin) "\n")
         (insert (number-to-string (line-number-at-pos begin)) ","
                 (number-to-string (line-number-at-pos end)) "; "
                 "#" (number-to-string begin) ","
