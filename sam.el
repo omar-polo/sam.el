@@ -164,7 +164,7 @@
 (defun sam-current-buffer-region ()
   "Returns a cons of `region-beginning' . `region-end' in the current buffer."
   (with-current-buffer sam-current-buffer
-    `(,(region-beginning) . (region-end))))
+    `(,(region-beginning) . ,(region-end))))
 
 (defun sam-list-file-buffers ()
   "Return a list of buffer that are visiting a file."
