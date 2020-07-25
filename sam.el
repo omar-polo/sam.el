@@ -148,6 +148,7 @@
          (addr   (car parsed))
          (cmd    (cdr parsed)))
     (insert "\n")
+    (goto-char (point-max))
     (sam-set-dot addr)
     (sam-exec-command cmd)))
 
