@@ -177,7 +177,7 @@
     (buffer-substring-no-properties (region-beginning)
                                     (region-end))))
 
-(defun sam-cmd-charoffset ()
+(defun sam-cmd-charoffset (_arg)
   (cl-destructuring-bind (begin . end) (sam-current-buffer-region)
     (with-current-buffer (sam-get-buffer)
       (insert "#" (number-to-string begin) ","
@@ -190,29 +190,29 @@
               "#" (number-to-string begin) ","
               "#" (number-to-string end)   "\n"))))
 
-(defun sam-cmd-filename ()
+(defun sam-cmd-filename (_arg)
   (with-current-buffer (sam-get-buffer)
     (insert (buffer-name sam-current-buffer) "\n")))
 
-(defun sam-cmd-print ()
+(defun sam-cmd-print (_arg)
   (let ((s (sam-get-region-as-string)))
     (with-current-buffer (sam-get-buffer)
       (insert s "\n"))))
 
-(defun sam-cmd-switch-buffer ()
+(defun sam-cmd-switch-buffer (_arg)
   (with-current-buffer (sam-get-buffer)
     (sam-report-error "not implemented yet")))
 
-(defun sam-cmd-switch-buffer-no-fuzzy ()
+(defun sam-cmd-switch-buffer-no-fuzzy (_arg)
   (with-current-buffer (sam-get-buffer)
     (sam-report-error "not implemented yet")))
 
-(defun sam-cmd-buflist ()
+(defun sam-cmd-buflist (_arg)
   (with-current-buffer (sam-get-buffer)
     (dolist (buf (sam-list-file-buffers))
       (insert "   " (buffer-file-name buf) "\n"))))
 
-(defun sam-cmd-quit ()
+(defun sam-cmd-quit (_arg)
   (kill-buffer (sam-get-buffer)))
 
 (defun sam-mode ()
