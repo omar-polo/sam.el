@@ -117,14 +117,14 @@
 
 (defun sam-get-line ()
   "Returns the string on the current line."
-  (copy-region-as-kill
-   (+ (if (and (not sam-is-inserting)
-               sam-prompt)
-          (length sam-prompt)
-        0)
-      (point-at-bol))
-   (point-at-eol))
-  (pop kill-ring))
+  (let ((off (if (and (not sam-is-inserting)
+                      sam-prompt)
+                 (length sam-prompt)
+               0)))
+    (copy-region-as-kill
+     (+ off (point-at-bol))
+     (point-at-eol))
+    (pop kill-ring)))
 
 (defun sam-parse-command (cmd)
   (cl-loop
