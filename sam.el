@@ -44,11 +44,8 @@
 (defvar sam-current-buffer nil
   "The active buffer where command would operate on.'")
 
-(defvar sam-prompt ""
-  "The sam prompt.")
-
-(defvar sam-display-prompt nil
-  "Whether to display the prompt or not.")
+(defvar sam-prompt nil
+  "The sam prompt.  If nil, no prompt will be printed")
 
 (defvar sam-is-inserting nil
   "t if sam is accepting text input instead of commands.")
@@ -122,8 +119,8 @@
   "Returns the string on the current line."
   (copy-region-as-kill
    (+ (if (and (not sam-is-inserting)
-               sam-display-prompt)
-          (length sam-display-prompt)
+               sam-prompt)
+          (length sam-prompt)
         0)
       (point-at-bol))
    (point-at-eol))
@@ -158,7 +155,7 @@
   (interactive)
   (sam-exec-line)
   (message "foo")
-  (if (and (not sam-is-inserting) sam-display-prompt)
+  (if (and (not sam-is-inserting) sam-prompt)
       (insert sam-prompt)))
 
 (defun sam-current-buffer-p (buf)
