@@ -13,7 +13,7 @@
                   ("" "b"   <- "b")
                   ("32" ""  <- "32")))
     (cl-destructuring-bind (exp-addr exp-cmd _ cmd) spec
-      (cl-destructuring-bind (address . command) (sam-parse-command cmd)
+      (cl-destructuring-bind (address . command) (sam-parse-line cmd)
         (should (string-equal exp-addr address))
         (should (string-equal exp-cmd  command))))))
 
