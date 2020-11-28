@@ -26,3 +26,6 @@
           (should (string-equal exp-fn  fn))))))
 
 ;; (ert-run-tests-interactively t)
+
+(provide 'sam-test)
+;;; sam-test.el ends here
