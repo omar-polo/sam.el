@@ -109,10 +109,13 @@
       (setq mark-active t))))
 
 (defun sam-set-dot (address)
-  (when sam-current-buffer
-    (if (string-equal address "")
-        nil
-      (sam-dot-select-line (string-to-number address)))))
+  "Set the dot to ADDRESS."
+  (cond ((not sam-current-buffer)
+         (sam-report-error "No buffer selected"))
+        ((string-equal address "")
+         nil)
+        (t
+         (sam-dot-select-line (string-to-number address)))))
 
 (defun sam-get-line ()
   "Return the string on the current line."
