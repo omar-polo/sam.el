@@ -135,11 +135,11 @@
    when (string-equal command cmd) return `(,command . ,fn)))
 
 (defun sam-exec-command (cmd)
-  (let ((tmp (sam-parse-command cmd)))
-    (if tmp
-        (cl-destructuring-bind (cmd . fn) tmp
-          (funcall fn (substring cmd (length cmd))))
-      (sam-report-error (concat "unknown command: " cmd)))))
+  "Execute the string CMD as sam command."
+  (if-let (tmp (sam-parse-command cmd))
+      (cl-destructuring-bind (cmd . fn) tmp
+        (funcall fn (substring cmd (length cmd))))
+    (sam-report-error (concat "unknown command: " cmd))))
 
 (defun sam-exec-line ()
   "Run the sam command on this line."
