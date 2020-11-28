@@ -7,12 +7,12 @@
 (require 'sam)
 
 (ert-deftest sam-parse-line-test ()
-  (dolist (spec '(("3" "p"  <- "3p")
-                  ("3" "p"  <- "3 p")
-                  ("34" "p" <- "34\tp")
-                  ("" "b"   <- "b")
-                  ("32" ""  <- "32")))
-    (cl-destructuring-bind (exp-addr exp-cmd _ cmd) spec
+  (dolist (spec '(("3p"    ->  "3" "p")
+                  ("3 p"   ->  "3" "p")
+                  ("34\tp" -> "34" "p")
+                  ("b"     ->   "" "b")
+                  ("32"    -> "32" "")))
+    (cl-destructuring-bind (cmd _ exp-addr exp-cmd) spec
       (cl-destructuring-bind (address . command) (sam-parse-line cmd)
         (should (string-equal exp-addr address))
         (should (string-equal exp-cmd  command))))))
