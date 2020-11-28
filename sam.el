@@ -42,16 +42,16 @@
   :link '(url-link :tag "Git repo" "https://git.omarpolo.com/sam.el"))
 
 (defvar sam-current-buffer nil
-  "The active buffer where command would operate on.'")
+  "The active buffer where command would operate on.")
 
 (defvar sam-prompt nil
-  "The sam prompt.  If nil, no prompt will be printed")
+  "The sam prompt.  If nil, no prompt will be printed.")
 
 (defvar sam-is-inserting nil
-  "t if sam is accepting text input instead of commands.")
+  "T if sam is accepting text input instead of commands.")
 
 (defvar sam-last-replace nil
-  "last replaced regexp.")
+  "Last replaced regexp.")
 
 (defvar sam-mark-alist nil
   "Sam marks.")
@@ -79,11 +79,12 @@
   (get-buffer "*sam*"))
 
 (defun sam-report-error (err)
+  "Report error ERR on the sam buffer."
   (with-current-buffer (sam-get-buffer)
     (insert "?" err)))
 
 (defun sam-parse-line (s)
-  "Returns an cons of `address' and `command'"
+  "Parse S and return an cons of `address' and `command'."
   (let ((address "")
         (command "")
         (run t)
@@ -99,6 +100,7 @@
     `(,address . ,(string-trim-left command))))
 
 (defun sam-dot-select-line (lineno)
+  "Select the line LINENO."
   (with-current-buffer sam-current-buffer
     (with-no-warnings
       (goto-line lineno)
@@ -116,7 +118,7 @@
       (sam-dot-select-line (string-to-number address)))))
 
 (defun sam-get-line ()
-  "Returns the string on the current line."
+  "Return the string on the current line."
   (let ((off (if (and (not sam-is-inserting)
                       sam-prompt)
                  (length sam-prompt)
@@ -127,6 +129,7 @@
     (pop kill-ring)))
 
 (defun sam-parse-command (cmd)
+  "Parse CMD and return a cons of `cmd' and the associated function, or nil on invalid commands."
   (cl-loop
    for (command . fn) in sam-cmd-alist
    when (string-equal command cmd) return `(,command . ,fn)))
@@ -150,8 +153,7 @@
     (sam-exec-command cmd)))
 
 (defun sam-newline ()
-  "Insert a newline, executing the command on this line if in
-  command mode."
+  "Insert a newline, executing the command on this line if in command mode."
   (interactive)
   (sam-exec-line)
   (message "foo")
@@ -238,7 +240,7 @@
   (run-hooks 'sam-mode-hook))
 
 (defun sam ()
-  "Launch a sam session associated with the current buffer."
+  "Launch a sam session initially associated with the current buffer."
   (interactive)
   (let ((edit-buffer (buffer-name)))
     (pop-to-buffer "*sam*")
