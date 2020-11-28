@@ -6,7 +6,7 @@ compile: sam.elc sam-test.elc
 sam-test.elc: sam.elc
 
 check: sam-test.elc
-	${EMACS} -Q --batch -L . -l sam.elc -f ert-run-tests-batch
+	${EMACS} -Q --batch -L . -l sam-test.elc -f ert-run-tests-batch
 
 clean:
 	rm -f *.elc
