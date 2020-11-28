@@ -239,6 +239,7 @@
   (setq major-mode 'sam-mode)
   (run-hooks 'sam-mode-hook))
 
+;;;###autoload
 (defun sam ()
   "Launch a sam session initially associated with the current buffer."
   (interactive)
