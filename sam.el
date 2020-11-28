@@ -81,7 +81,7 @@
 (defun sam-report-error (err)
   "Report error ERR on the sam buffer."
   (with-current-buffer (sam-get-buffer)
-    (insert "?" err)))
+    (insert "?" err "\n")))
 
 (defun sam-parse-line (s)
   "Parse S and return an cons of `address' and `command'."
