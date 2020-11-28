@@ -104,12 +104,9 @@
   (with-current-buffer sam-current-buffer
     (with-no-warnings
       (goto-line lineno)
-      (let (p1 p2)
-        (setq p1 (line-beginning-position)
-              p2 (line-end-position))
-        (goto-char p2)
-        (push-mark p1)
-        (setq mark-active t)))))
+      (goto-char (line-end-position))
+      (push-mark (line-beginning-position))
+      (setq mark-active t))))
 
 (defun sam-set-dot (address)
   (when sam-current-buffer
