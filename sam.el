@@ -24,9 +24,9 @@
 ;; URL: https://git.omarpolo.com/sam.el
 ;; Keywords: emulation
 
-;;; Commentary
+;;; Commentary:
 
-;; TODO.
+;; sam.el is a layer of emulation for sam, the plan9 text editor.
 
 ;;; Code:
 
