@@ -36,7 +36,7 @@
 (require 'cl-lib)
 
 (defgroup sam nil
-  "sam for Emacs."
+  "Sam for Emacs."
   :prefix "sam-"
   :group 'emulations
   :link '(url-link :tag "Git repo" "https://git.omarpolo.com/sam.el"))
