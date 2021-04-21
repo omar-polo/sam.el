@@ -173,12 +173,12 @@ empty string), and rest is what follows."
       (insert sam-prompt)))
 
 (defun sam-current-buffer-p (buf)
-  "True if `buf' is the current sam buffer."
+  "True if BUF is the current sam buffer."
   (string-equal (buffer-name buf)
                 (buffer-name sam-current-buffer)))
 
 (defun sam-current-buffer-region ()
-  "Returns a cons of `region-beginning' . `region-end' in the current buffer."
+  "Return a cons of `region-beginning' . `region-end' in the current buffer."
   (with-current-buffer sam-current-buffer
     `(,(region-beginning) . ,(region-end))))
 
@@ -189,11 +189,13 @@ empty string), and rest is what follows."
            collect buf))
 
 (defun sam-get-region-as-string ()
+  "Return `sam-current-buffer' region as string."
   (with-current-buffer sam-current-buffer
     (buffer-substring-no-properties (region-beginning)
                                     (region-end))))
 
 (defun sam-cmd-charoffset (_arg)
+  "Print the character offset of the dot."
   (cl-destructuring-bind (begin . end) (sam-current-buffer-region)
     (with-current-buffer (sam-get-buffer)
       (if (= begin end)
@@ -202,6 +204,7 @@ empty string), and rest is what follows."
                 "#" (number-to-string end)   "\n")))))
 
 (defun sam-cmd-linenum (_arg)
+  "Print the line number of the dot."
   (cl-destructuring-bind (begin . end) (sam-current-buffer-region)
     (with-current-buffer (sam-get-buffer)
       (if (= begin end)
@@ -213,23 +216,28 @@ empty string), and rest is what follows."
                 "#" (number-to-string end)   "\n")))))
 
 (defun sam-cmd-filename (_arg)
+  "Print current file name."
   (with-current-buffer (sam-get-buffer)
     (insert (buffer-name sam-current-buffer) "\n")))
 
 (defun sam-cmd-print (_arg)
+  "Print the current dot."
   (let ((s (sam-get-region-as-string)))
     (with-current-buffer (sam-get-buffer)
       (insert s "\n"))))
 
 (defun sam-cmd-switch-buffer (_arg)
+  "Select another buffer as `sam-current-buffer'."
   (with-current-buffer (sam-get-buffer)
-    (sam-report-error "not implemented yet")))
+    (sam-report-error "Not implemented yet")))
 
 (defun sam-cmd-switch-buffer-no-fuzzy (_arg)
+  "Like `sam-switch-buffer' but don't try to expand the arg."
   (with-current-buffer (sam-get-buffer)
-    (sam-report-error "not implemented yet")))
+    (sam-report-error "Not implemented yet")))
 
 (defun sam-cmd-buflist (_arg)
+  "Print buffer list."
   (with-current-buffer (sam-get-buffer)
     (dolist (buf (sam-list-file-buffers))
       (insert
@@ -241,9 +249,12 @@ empty string), and rest is what follows."
        "\n"))))
 
 (defun sam-cmd-quit (_arg)
+  "Quit sam, doesn't affect Emacs."
   (kill-buffer (sam-get-buffer)))
 
 (defun sam-cmd-subst (arg)
+  "Substitute in region.
+ARG is parsed as the sam command `s'."
   (cl-destructuring-bind (parsed rest) (sam-parse-delimited arg)
     (with-current-buffer sam-current-buffer
       (let ((start (region-beginning))
@@ -271,3 +282,4 @@ empty string), and rest is what follows."
     (setq sam-current-buffer (get-buffer edit-buffer))))
 
 (provide 'sam)
+;;; sam.el ends here
