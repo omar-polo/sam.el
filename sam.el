@@ -72,7 +72,8 @@
     ("b"  . sam-cmd-switch-buffer)
     ("B"  . sam-cmd-switch-buffer-no-fuzzy)
     ("n"  . sam-cmd-buflist)
-    ("q"  . sam-cmd-quit)))
+    ("q"  . sam-cmd-quit)
+    ("s"  . sam-cmd-subst)))
 
 (defun sam-get-buffer ()
   "Gets the buffer of this sam instance."
@@ -132,13 +133,25 @@
   "Parse CMD and return a cons of `cmd' and the associated function, or nil on invalid commands."
   (cl-loop
    for (command . fn) in sam-cmd-alist
-   when (string-equal command cmd) return `(,command . ,fn)))
+   when (string-prefix-p command cmd) return `(,command . ,fn)))
+
+;; TODO: this is still pretty hacky, should be made more robust.
+(defun sam-parse-delimited (cmd)
+  "Parse a delimited string.
+Expect CMD to be in the form `S.*S.*' where `S' is an arbitrary
+separator (usually /) and return a list of (PARSED REST), where
+parsed is the text inside the first delimiters pair (possibly the
+empty string), and rest is what follows."
+  (if (string-empty-p cmd)
+      nil
+    (let ((delimiter (make-string 1 (aref cmd 0))))
+      (cdr (split-string cmd (regexp-quote delimiter))))))
 
 (defun sam-exec-command (cmd)
   "Execute the string CMD as sam command."
   (if-let (tmp (sam-parse-command cmd))
-      (cl-destructuring-bind (cmd . fn) tmp
-        (funcall fn (substring cmd (length cmd))))
+      (cl-destructuring-bind (c . fn) tmp
+        (funcall fn (substring cmd (length c))))
     (sam-report-error (concat "unknown command: " cmd))))
 
 (defun sam-exec-line ()
@@ -156,7 +169,6 @@
   "Insert a newline, executing the command on this line if in command mode."
   (interactive)
   (sam-exec-line)
-  (message "foo")
   (if (and (not sam-is-inserting) sam-prompt)
       (insert sam-prompt)))
 
@@ -230,6 +242,16 @@
 
 (defun sam-cmd-quit (_arg)
   (kill-buffer (sam-get-buffer)))
+
+(defun sam-cmd-subst (arg)
+  (cl-destructuring-bind (parsed rest) (sam-parse-delimited arg)
+    (with-current-buffer sam-current-buffer
+      (let ((start (region-beginning))
+            (end (region-end)))
+        (save-excursion
+          (goto-char start)
+          (while (search-forward parsed end t)
+            (replace-match rest nil t)))))))
 
 (defun sam-mode ()
   "Major mode for sam buffers."
