@@ -1,5 +1,10 @@
 ;;; sam-test.el --- sam test suite.  -*- lexical-binding: t -*-
 
+;;; Commentary:
+;; Sam.el test case.
+
+;;; Code:
+
 (eval-when-compile
   (require 'cl-lib))
 
@@ -24,6 +29,21 @@
      do (cl-destructuring-bind (cmd . fn) (sam-parse-command input)
           (should (string-equal exp-cmd cmd))
           (should (string-equal exp-fn  fn))))))
+
+(ert-deftest sam-parse-delimited-test ()
+  (cl-flet ((parse-delimited (in exp)
+                             (equal (sam-parse-delimited in)
+                                    exp)))
+    (cl-loop with spec = '(("/foo/bar" . ("foo" "bar"))
+                           ("?foo?bar" . ("foo" "bar"))
+                           (",foo,"    . ("foo" ""))
+                           ("||"       . ("" ""))
+                           ("*foo*bar" . ("foo" "bar"))
+                           (".foo.bar" . ("foo" "bar"))
+                           ;(".foo...." . ("foo" "..."))
+                           )
+             for (input . exp) in spec
+             do (should (parse-delimited input exp)))))
 
 ;; (ert-run-tests-interactively t)
 
